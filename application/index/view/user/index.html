@@ -1,0 +1,132 @@
+<!doctype html>
+
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>智能AR系统</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+</head>
+
+<body>
+<!-- Header -->
+<header data-am-widget="header" class="am-header am-header-default">
+    <h1 class="am-header-title">
+        <a href="#title-link">我的</a>
+    </h1>
+</header>
+<!-- Content -->
+<div class="wapper" data-html="user">
+    <div class="am-g am-padding-top-sm am-padding-left-sm am-bg-white am-padding-bottom-sm head-area">
+        <div class="am-u-sm-3 am-padding-left-0 am-margin-top-xs">
+            <img class="am-round" src="{$user.avatar|default='/assets/frontend/img/avator.png'}" style="width: 75px;height: 75px;" />
+        </div>
+        <div class="am-u-sm-9 am-padding-left-0 am-padding-top-xs">
+            <div class="am-inline-block">
+                <div><em class="am-head-icon icon-name"></em>{$user.nickname|default='未设置'}</div>
+                <div><em class="am-head-icon icon-role"></em>{$level}</div>
+                <div><em class="am-head-icon icon-number"></em>{$user.mobile}</div>
+                <div><em class="am-head-icon icon-money"></em>{$user->account->balance} USDT</div>
+            </div>
+        </div>
+        <a href="/index/user/profile" class="am-icon-setting"></a>
+    </div>
+    <div class="am-margin-top-sm">
+        <div class="am-margin-bottom-sm">
+            <ul class="am-list am-list-static am-list-border am-margin-bottom-0">
+                <li onclick="window.location.href='/index/account'">
+                    <img src="__CDN__/assets/frontend/img/menu1.png" class="am-menu-icon" />
+                    <span>我的钱包</span>
+                    <span class="am-fr am-link-muted"><i class="am-icon am-icon-angle-right"></i></span>
+                </li>
+                <li onclick="window.location.href='/index/user/securityCenter'">
+                    <img src="__CDN__/assets/frontend/img/menu2.png" class="am-menu-icon" />
+                    <span>安全中心</span>
+                    <span class="am-fr am-link-muted"><i class="am-icon am-icon-angle-right"></i></span>
+                </li>
+                <li onclick="window.location.href='/index/user/recommend'">
+                    <img src="__CDN__/assets/frontend/img/menu3.png" class="am-menu-icon" />
+                    <span>我的直推</span>
+                    <span class="am-fr am-link-muted"><i class="am-icon am-icon-angle-right"></i></span>
+                </li>
+                <li  onclick="window.location.href='/index/user/node'">
+                    <img src="__CDN__/assets/frontend/img/menu4.png" class="am-menu-icon" />
+                    <span>我的节点</span>
+                    <span class="am-fr am-link-muted"><i class="am-icon am-icon-angle-right"></i></span>
+                </li>
+                <li onclick="window.location.href='/index/user/share'">
+                    <img src="__CDN__/assets/frontend/img/menu5.png" class="am-menu-icon" />
+                    <span>分享链接</span>
+                    <span class="am-fr am-link-muted"><i class="am-icon am-icon-angle-right"></i></span>
+                </li>
+                <li onclick="window.location.href='/index/task'">
+                    <img src="__CDN__/assets/frontend/img/menu6.png" class="am-menu-icon" />
+                    <span>任务中心</span>
+                    <span class="am-fr am-link-muted"><i class="am-icon am-icon-angle-right"></i></span>
+                </li>
+
+                <li onclick="window.location.href='/index/rule'">
+                    <img src="__CDN__/assets/frontend/img/menu7.png" class="am-menu-icon" />
+                    <span>规章制度</span>
+                    <span class="am-fr am-link-muted"><i class="am-icon am-icon-angle-right"></i></span>
+                </li>
+                <li onclick="window.location.href='/index/feedback'">
+                    <img src="__CDN__/assets/frontend/img/menu8.png" class="am-menu-icon" />
+                    <span>意见反馈</span>
+                    <span class="am-fr am-link-muted"><i class="am-icon am-icon-angle-right"></i></span>
+                </li>
+                <li onclick="window.location.href='/index/user/logout'">
+                    <img src="__CDN__/assets/frontend/img/menu9.png" class="am-menu-icon" />
+                    <span>退出登录</span>
+                    <span class="am-fr am-link-muted"><i class="am-icon am-icon-angle-right"></i></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+<!-- Footer-Menu -->
+<div data-am-widget="navbar" class="am-navbar am-cf am-navbar-default" id="footer-nav">
+    <ul class="am-navbar-nav am-cf am-avg-sm-4">
+        <li>
+            <a href="/index">
+                <img src="__CDN__/assets/frontend/img/home.png" />
+                <span class="am-navbar-label">首页</span>
+            </a>
+        </li>
+        <li>
+            <a href="/index/learn">
+                <img src="__CDN__/assets/frontend/img/study.png" />
+                <span class="am-navbar-label">学习</span>
+            </a>
+        </li>
+        <li>
+            <a href="/index/examination">
+                <img src="__CDN__/assets/frontend/img/test.png" />
+                <span class="am-navbar-label">考试</span>
+            </a>
+        </li>
+        <li>
+            <a href="/index/notice">
+                <img src="__CDN__/assets/frontend/img/message.png" />
+                <span class="am-navbar-label">信息</span>
+            </a>
+        </li>
+        <li class="am-active">
+            <a href="javascript:void(0);">
+                <img src="__CDN__/assets/frontend/img/user_a.png" />
+                <span class="am-navbar-label">我的</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>智能AR系统</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+</head>
+
+<body class="am-bg-white">
+<!-- Header -->
+<header data-am-widget="header" class="am-header am-header-default">
+    <div class="am-header-left am-header-nav">
+        <a href="javascript:void(0);" onclick="javascript:history.back(-1);return false;"><img src="__CDN__/assets/frontend/img/icon-back-act.png"></a>
+    </div>
+    <h1 class="am-header-title">
+        <a href="#title-link">分享链接</a>
+    </h1>
+</header>
+<!-- Content -->
+<div class="wapper fv am-text-center" data-html="shareCenter">
+    <div class="am-padding-top-lg">
+        {if $canShare}
+        <div class="am-padding-xs am-bg-white am-radius" style="width: 200px;margin: 0 auto;"><img src="{$user.share_image}" width="200" height="200" ></div>
+        <div class="am-padding-top-sm am-padding-bottom-sm">
+            <input type="button" class="am-btn am-btn-primary am-radius copy-btn" onclick="copyUrl();" value="复制链接" />
+        </div>
+        <div style="width: 80%;margin: 0 auto;">
+            <input type="hidden" class="am-form-field am-radius url-link" value="{$Think.server.request_scheme}://{$Think.server.server_name}/index/user/register?rid={$user.id}" readonly="readonly" />
+        </div>
+        {else /}
+            <div class="am-alert am-text-center">您不是有效会员，无法进行推广。</div>
+        {/if}
+    </div>
+</div>
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+<script src="__CDN__/assets/frontend/plugins/layer/layer.js"></script>
+<script type="text/javascript">
+    function copyUrl(){
+        var txt=$(".url-link").val();
+        copy(txt);
+    }
+    function copy(message) {
+        var input = document.createElement("input");
+        input.value = message;
+        document.body.appendChild(input);
+        input.select();
+        input.setSelectionRange(0, input.value.length), document.execCommand('Copy');
+        document.body.removeChild(input);
+        layer.msg('复制成功',{time:1500});
+    }
+</script>
+</body>
+</html>

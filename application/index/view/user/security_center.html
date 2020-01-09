@@ -1,0 +1,47 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>智能AR系统</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+    <style type="text/css">
+        .wallet-head-bg{height: 10rem;}
+    </style>
+</head>
+
+<body>
+<!-- Header -->
+<header data-am-widget="header" class="am-header am-header-default">
+    <div class="am-header-left am-header-nav">
+        <a href="javascript:void(0);" onclick="javascript:history.back(-1);return false;"><img src="__CDN__/assets/frontend/img/icon-back-act.png"></a>
+    </div>
+    <h1 class="am-header-title">
+        <a href="#title-link">安全中心</a>
+    </h1>
+</header>
+<!-- Content -->
+<div class="wapper" data-html="wallet">
+    <div class="wallet-head-bg am-text-center am-padding-sm"></div>
+
+    <ul class="am-list am-list-static am-margin-0">
+        <li onclick="window.location.href='/index/user/loginPassword'">
+            <span>登录密码</span>
+            <span class="am-fr am-link-muted"><i class="am-icon am-icon-angle-right"></i></span>
+        </li>
+        <li onclick="window.location.href='/index/user/payPassword'">
+            <span>支付密码</span>
+            <span class="am-fr am-link-muted"><i class="am-icon am-icon-angle-right"></i></span>
+        </li>
+    </ul>
+</div>
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+</body>
+</html>

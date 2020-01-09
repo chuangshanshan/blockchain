@@ -1,0 +1,184 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>智能AR系统</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/login.css" />
+    <style type="text/css">
+        .am-form input[type="text"], .am-form-field{padding-left: 0.5em;}
+    </style>
+</head>
+
+<body class="am-bg-white">
+<!-- Header -->
+<header data-am-widget="header" class="am-header am-header-default">
+    <div class="am-header-left am-header-nav">
+        <a href="javascript:void(0);" onclick="javascript:history.back(-1);return false;"><img src="__CDN__/assets/frontend/img/icon-back-act.png"></a>
+    </div>
+    <h1 class="am-header-title">
+        <a href="#title-link">注册</a>
+    </h1>
+</header>
+<!-- Content -->
+<div class="wapper">
+    <div class="login-img am-padding-top"><img src="__CDN__/assets/frontend/img/logo.png" /></div>
+    <div class="am-margin">
+        <form class="am-form am-form-horizontal">
+            <div class="am-form-group">
+                <input type="text" class="am-form-field" name="mobile" placeholder="请输入手机号">
+            </div>
+            <div class="am-form-group">
+                <div class="am-u-sm-8 am-padding-0">
+                    <input type="text" class="am-form-field" name="ycode" placeholder="请输入验证码">
+                </div>
+                <div class="am-u-sm-4 am-padding-right-0">
+                    <input type="text" class="ub-f1 am-text-primary am-text-center" onclick="getCode();" id="goCode" value="发送验证码" readonly="readonly" style="background-color: transparent;">
+                </div>
+            </div>
+            <div class="am-form-group">
+                <input type="text" class="am-form-field" value="{$rMobile}" name="refreeId" placeholder="请输入推荐人手机号">
+            </div>
+            <div class="am-form-group">
+                <input type="password" class="am-form-field" name="pwd" placeholder="请输入密码">
+            </div>
+            <div class="am-form-group">
+                <input type="password" class="am-form-field" name="repwd" placeholder="请再次输入密码">
+            </div>
+            <div class="am-padding am-padding-top-xs">
+                <button type="button" class="am-btn am-btn-primary am-round am-btn-block" id="register">注册</button>
+            </div>
+        </form>
+        <div class="am-text-center"><a href="{$site.download_app??''}">下载APP</a></div>
+
+    </div>
+</div>
+<!-- Footer-Menu -->
+
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+<script src="__CDN__/assets/frontend/plugins/layer/layer.js"></script>
+<script src="__CDN__/assets/frontend/js/app.js"></script>
+<script>
+    var __token__ = '{$Request.token}';
+    var wait = 60;
+    /***********获取验证码****************/
+    function time() {
+        if (wait == 0) {
+            $("#goCode").removeAttr('disabled').removeClass('am-link-muted').addClass('am-text-primary');
+            $("#goCode").val("发送验证码");
+            wait = 60;
+        } else {
+            $("#goCode").attr('disabled', 'disabled').removeClass('am-text-primary').addClass('am-link-muted');
+            $("#goCode").val("重新发送" + wait + "s");
+            wait--;
+            setTimeout(function() {
+                    time();
+                },
+                1000)
+        }
+    }
+    function getCode() {
+        var phone = $('input[name=mobile]').val();
+        if (phone == "") {
+            layer.msg('请输入手机号!',{time : 1500});
+            return;
+        }
+        //向后台发送验证码
+        $.ajax({
+            //请求方式
+            type: 'POST',
+            //发送请求的地址
+            url: '/api/sms/send',
+            //服务器返回的数据类型
+            dataType: 'json',
+            //发送到服务器的数据，对象必须为key/value的格式，jquery会自动转换为字符串格式
+            data: {mobile: phone,event:'register',__token__:__token__},
+            success: function (data) {
+                if(data.code ==1){
+                    layer.msg('发送成功');
+                    //请求成功函数内容
+                    time();
+                }else{
+                    __token__=data.token;
+                    layer.msg('发送失败,'+data.msg);
+                }
+
+            },
+            error: function (jqXHR) {
+                //请求失败函数内容
+                layer.msg('发送失败');
+            }
+        });
+    }
+    //注册
+    $('#register').click(function(){
+        var mobile = $('input[name=mobile]').val(),
+            refreeId = $('input[name=refreeId]').val(),
+            rid = $('input[name=rid]').val(),
+            pwd = $('input[name=pwd]').val(),
+            repwd = $('input[name=repwd]').val(),
+            ycode = $('input[name=ycode]').val();
+
+        if(mobile == ""){
+            layer.msg('请输入手机号',{time:1500});
+            return;
+        }
+        if(pwd == ""){
+            layer.msg('请输入密码',{time:1500});
+            return;
+        }
+        if(repwd == ""){
+            layer.msg('请再次输入密码',{time:1500});
+            return;
+        }
+        if(ycode == ""){
+            layer.msg('请输入验证码',{time:1500});
+            return;
+        }
+        //form提交
+        //向后台发送验证码
+        $.ajax({
+            //请求方式
+            type: 'POST',
+            //发送请求的地址
+            url: '/index/user/register',
+            //服务器返回的数据类型
+            dataType: 'json',
+            //发送到服务器的数据，对象必须为key/value的格式，jquery会自动转换为字符串格式
+            data: {
+                mobile: mobile,
+                password: pwd,
+                validate_password: repwd,
+                captcha: ycode,
+                rid: rid,
+                rmobile: refreeId,
+                __token__: __token__
+            },
+            success: function (data) {
+                if (data.code == 1) {
+                    layer.msg('注册成功', {time: 1500});
+                    //请求成功函数内容
+                    window.location.href = '/index';
+                } else {
+                    layer.msg(data.msg);
+                    __token__ = data.data.token;
+                }
+
+            },
+            error: function (jqXHR) {
+                //请求失败函数内容
+                layer.msg('注册失败');
+            }
+        });
+    })
+</script>
+</body>
+</html>

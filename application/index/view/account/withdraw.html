@@ -1,0 +1,148 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>1401</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+</head>
+
+<body class="sc-bg-ed">
+<!-- Header -->
+<header data-am-widget="header" class="am-header am-header-default">
+    <div class="am-header-left am-header-nav">
+        <a href="javascript:void(0);" onclick="javascript:history.back(-1);return false;">
+            <img class="am-header-icon-custom" src="__CDN__/assets/frontend/img/icon-back-act.png">
+        </a>
+    </div>
+    <h1 class="am-header-title">
+        <a href="#title-link">提现</a>
+    </h1>
+</header>
+<!-- Content -->
+<div class="wapper" data-html="form">
+    <div class="am-padding-top-sm">
+        {if $canWithdraw}
+        <form class="am-form am-form-horizontal ">
+            <div class="am-form-group am-bg-white">
+                <label class="am-u-sm-3 am-form-label">币种</label>
+                <div class="am-u-sm-9">
+                    <input type="text" value="USDT" name="coinId" readonly="readonly">
+                </div>
+            </div>
+            <div class="am-form-group am-bg-white">
+                <label class="am-u-sm-3 am-form-label">当前余额</label>
+                <div class="am-u-sm-9">
+                    <input type="text" value="{$user->account->balance}" name="balance" readonly="readonly">
+                </div>
+            </div>
+            <div class="am-form-group am-bg-white">
+                <label class="am-u-sm-3 am-form-label">可提余额</label>
+                <div class="am-u-sm-9">
+                    <input type="text" value="{$canWithdrawAmount}" name="can_withdraw_balance" readonly="readonly">
+                </div>
+            </div>
+            <div class="am-form-group am-bg-white">
+                <label class="am-u-sm-3 am-form-label">提币数量</label>
+                <div class="am-u-sm-9">
+                    <input type="text" value="" name="money" placeholder="请填写提币数量" onkeyup="ZW.Common.onlyPrice(this);">
+                    <p class="am-text-right am-text-xs am-link-muted am-padding-top-xs">
+                        手续费：{$site.withdraw_fee_rate}%</p>
+                    <p class="am-text-right am-text-xs am-link-muted am-padding-top-xs">
+                        最少提现金额：{$site.withdraw_lower_limit}</p>
+                </div>
+            </div>
+            <div class="am-form-group am-bg-white">
+                <label class="am-u-sm-3 am-form-label">交易密码</label>
+                <div class="am-u-sm-9">
+                    <input type="password" value="" name="paypwd" placeholder="请填写交易密码">
+                </div>
+            </div>
+            <div class="am-form-group am-bg-white">
+                <div class="am-form-label am-padding-bottom-sm">提币地址<a href="/index/account/walletAddress"
+                                                                       class="am-text-primary am-text-xs am-fr">选择地址</a>
+                </div>
+                <div class="">
+                    <input type="text" value="{$walletAddress}" name="address" readonly="readonly"
+                           placeholder="请选择提币地址">
+                </div>
+            </div>
+            <div class="am-padding-sm">
+                <button type="button" class="am-btn am-btn-primary am-btn-block am-radius" id="submit">提交</button>
+            </div>
+        </form>
+        {else/}
+            <div class="am-alert am-text-center">提现通知：请看我的~规章制度第9条</div>
+        {/if}
+    </div>
+</div>
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+<script src="__CDN__/assets/frontend/plugins/layer/layer.js"></script>
+<script src="__CDN__/assets/frontend/js/app.js"></script>
+<script>
+    var amount_lower_limit = '{$site.withdraw_lower_limit}' * 1;
+    var __token__ = '{$Request.token}';
+    //提交
+    $('#submit').click(function () {
+        var money = $('input[name=money]').val(),
+            paypwd = $('input[name=paypwd]').val(),
+            can_withdraw_balance = $('input[name=can_withdraw_balance]').val(),
+            address = $('input[name=address]').val();
+
+        if (money == "") {
+            layer.msg("请输入提币数量!", {time: 1500});
+            return;
+        }
+        // if (money < amount_lower_limit) {
+        //     layer.msg("少于最少提币额!", {time: 1500});
+        //     return;
+        // }
+        if (paypwd == "") {
+            layer.msg("请输入交易密码!", {time: 1500});
+            return;
+        }
+        if (address == "") {
+            layer.msg("请选择提币地址!", {time: 1500});
+            return;
+        }
+        if (money > can_withdraw_balance) {
+            layer.msg("超过可提币数量!", {time: 1500});
+            return;
+        }
+        //向后台发送验证码
+        $.ajax({
+            //请求方式
+            type: 'POST',
+            //发送请求的地址
+            url: '/index/account/withdraw',
+            //服务器返回的数据类型
+            dataType: 'json',
+            //发送到服务器的数据，对象必须为key/value的格式，jquery会自动转换为字符串格式
+            data: {amount: money, pay_password: paypwd, address: address, __token__: __token__},
+            success: function (data) {
+                if (data.code == 1) {
+                    layer.msg('提现申请成功', {time: 1500});
+                    //请求成功函数内容
+                    window.location.reload()
+                } else {
+                    layer.msg('发送失败,' + data.msg);
+                    __token__ = data.data.token;
+                }
+
+            },
+            error: function (jqXHR) {
+                //请求失败函数内容
+                layer.msg('发送失败');
+            }
+        });
+    })
+</script>
+</body>
+</html>

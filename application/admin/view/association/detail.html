@@ -1,0 +1,52 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>{:__('Title')}</th>
+            <th>{:__('Content')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>报备人</td>
+            <td>{$row->user->username}</td>
+        </tr>
+        <tr>
+            <td>社群名称</td>
+            <td>{$row.name}</td>
+        </tr>
+        <tr>
+            <td>社群群主</td>
+            <td>{$row.owner}</td>
+        </tr>
+        <tr>
+            <td>老师名称</td>
+            <td>{$row.teacher}</td>
+        </tr>
+        <tr>
+            <td>社群二维码</td>
+            <td><img src="{$row.qr_code}" width="100" height="100" alt=""></td>
+        </tr>
+        <tr>
+            <td>状态</td>
+            <td>{$row.status_text}</td>
+        </tr>
+        <tr>
+            <td>报备时间</td>
+            <td>{$row.createtime|date='Y-m-d H:i:s',###}</td>
+        </tr>
+
+        </tbody>
+    </table>
+    <div class="hide layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            {if condition="($row.status == 1) "}
+            <button type="submit" class="btn btn-success btn-embossed " onclick="Layer.closeAll();">{:__('完成')}</button>
+            {/if}
+            <button type="reset" class="btn btn-primary btn-embossed btn-close" onclick="Layer.closeAll();">
+                {:__('Close')}
+            </button>
+        </div>
+    </div>
+</form>

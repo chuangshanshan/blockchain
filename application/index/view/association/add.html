@@ -1,0 +1,162 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>智能AR系统</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+</head>
+
+<body>
+<!-- Header -->
+<header data-am-widget="header" class="am-header am-header-default">
+    <div class="am-header-left am-header-nav">
+        <a href="javascript:void(0);" onclick="javascript:history.back(-1);return false;">
+            <img class="am-header-icon-custom" src="__CDN__/assets/frontend/img/icon-back-act.png">
+        </a>
+    </div>
+    <h1 class="am-header-title">
+        <a href="#title-link">社群报备</a>
+    </h1>
+</header>
+<!-- Content -->
+<div class="wapper" data-html="form">
+    <div class="am-padding-top-sm">
+        <form class="am-form am-form-horizontal ">
+            <input type="file" id="file" onchange="changeFile()" accept='image/*' value="" style="display: none">
+            <div class="am-form-group am-bg-white">
+                <label class="am-u-sm-3 am-form-label">社群名称</label>
+                <div class="am-u-sm-9">
+                    <input type="text" value="" name="groupName" placeholder="请填写社群名称">
+                </div>
+            </div>
+            <div class="am-form-group am-bg-white">
+                <label class="am-u-sm-3 am-form-label">社群群主</label>
+                <div class="am-u-sm-9">
+                    <input type="text" value="" name="groupUser" placeholder="请填写社群群主">
+                </div>
+            </div>
+            <div class="am-form-group am-bg-white">
+                <label class="am-u-sm-3 am-form-label">老师名称</label>
+                <div class="am-u-sm-9">
+                    <input type="text" value="" name="helper" placeholder="请填写老师名称">
+                </div>
+            </div>
+            <div class="am-form-group am-bg-white">
+                <label class="am-u-sm-3 am-form-label">社群二维码</label>
+                <div class="am-u-sm-9">
+                    <img class="am-img" src="__CDN__/assets/frontend/img/addImg.png" width="100" onclick="uploadFile()">
+                </div>
+                <!-- 上传方式选择 -->
+                <div class="am-modal-actions" id="my-actions">
+                    <div class="am-modal-actions-group">
+                        <ul class="am-list">
+                            <li class="am-modal-actions-header">从相册选择</li>
+                            <li class="am-modal-actions-header">拍照</li>
+                        </ul>
+                    </div>
+                    <div class="am-modal-actions-group">
+                        <button class="am-btn am-btn-secondary am-btn-block" data-am-modal-close>取消</button>
+                    </div>
+                </div>
+            </div>
+            <div class="am-padding-sm am-margin-top">
+                <button type="button" class="am-btn am-btn-primary am-btn-block am-radius" id="submit">提交</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+<script src="__CDN__/assets/frontend/plugins/layer/layer.js"></script>
+<script src="__CDN__/assets/frontend/js/app.js"></script>
+<script>
+    var __token__ = '{$Request.token}';
+    $('#submit').click(function(){
+        var name = $('input[name=groupName]').val(),
+            user = $('input[name=groupUser]').val(),
+            helper = $('input[name=helper]').val(),
+            imgsrc = $('.am-img').attr('src');
+
+        if(name == ""){
+            layer.msg('请填写社群名称',{time:1500});
+            return;
+        }
+        if(user == ""){
+            layer.msg('请填写社群群主',{time:1500});
+            return;
+        }
+        if(helper == ""){
+            layer.msg('请填写老师名称',{time:1500});
+            return;
+        }
+        if(imgsrc == "" ||  imgsrc == '/assets/frontend/img/addImg.png'){
+            layer.msg('请上传截图',{time:1500});
+            return;
+        }
+        //form提交
+        $.ajax({
+            //请求方式
+            type: 'POST',
+            //发送请求的地址
+            url: '/index/association/add',
+            //服务器返回的数据类型
+            dataType: 'json',
+            //发送到服务器的数据，对象必须为key/value的格式，jquery会自动转换为字符串格式
+            data: {name: name, owner: user, teacher: helper,qr_code:imgsrc, __token__: __token__},
+            success: function (data) {
+                if (data.code == 1) {
+                    layer.msg('提交成功');
+                    //请求成功函数内容
+                    window.location.href = '/index/association';
+                } else {
+                    layer.msg('提交失败,' + data.msg);
+                    __token__ = data.data.token;
+                }
+            },
+            error: function (jqXHR) {
+                //请求失败函数内容
+                layer.msg('提交失败');
+            }
+        });
+    })
+    function uploadFile() {
+        $('#file').click();
+    }
+
+    function changeFile() {
+        var formData = new FormData();
+        var file= $('#file').get(0).files[0];
+        if (!file){
+            return;
+        }
+        formData.append('file',file);
+        $.ajax({
+            type: 'POST',
+            url: '/index/ajax/upload',
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (res) {
+                if(res.code == 1){
+                    layer.msg('上传成功');
+                    $('.am-img').attr('src',res.data.url);
+                }else{
+                    layer.msg(res.msg, {time: 1500});
+                }
+            },
+            error: function (error) {
+                layer.msg('上传失败！', {time: 1500});
+            }
+        });
+    }
+</script>
+</body>
+</html>

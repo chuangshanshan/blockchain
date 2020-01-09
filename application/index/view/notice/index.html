@@ -1,0 +1,80 @@
+<!doctype html>
+
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>智能AR系统</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+</head>
+
+<body>
+<!-- Header -->
+<header data-am-widget="header" class="am-header am-header-default">
+    <h1 class="am-header-title">
+        <a href="#title-link">信息</a>
+    </h1>
+</header>
+<!-- Content -->
+<div class="wapper" data-html="message">
+    <div class="am-margin-top-sm">
+        <ul class="am-list am-list-static am-list-border am-margin-bottom-0">
+            {if $notices }
+            {foreach $notices as $notice}
+                <li onclick="window.location.href='/index/notice/detail?id={$notice.id}&type={$notice.type}'">
+                    <img src="__CDN__/assets/frontend/img/icon{$notice.type+1}.png" class="am-menu-icon am-fl" />
+                    <span class="am-block am-fl">{$notice.title}</span>
+                    <span class="am-fr am-link-muted"><i class="am-icon am-icon-angle-right"></i></span>
+                </li>
+            {/foreach}
+            {else}
+            <li class="am-text-center">未查到数据!!!</li>
+            {/if}
+        </ul>
+    </div>
+</div>
+<!-- Footer-Menu -->
+<div data-am-widget="navbar" class="am-navbar am-cf am-navbar-default" id="footer-nav">
+    <ul class="am-navbar-nav am-cf am-avg-sm-4">
+        <li>
+            <a href="/index">
+                <img src="__CDN__/assets/frontend/img/home.png" />
+                <span class="am-navbar-label">首页</span>
+            </a>
+        </li>
+        <li>
+            <a href="/index/learn">
+                <img src="__CDN__/assets/frontend/img/study.png" />
+                <span class="am-navbar-label">学习</span>
+            </a>
+        </li>
+        <li>
+            <a href="/index/examination">
+                <img src="__CDN__/assets/frontend/img/test.png" />
+                <span class="am-navbar-label">考试</span>
+            </a>
+        </li>
+        <li class="am-active">
+            <a href="javascript:void(0);">
+                <img src="__CDN__/assets/frontend/img/message_a.png" />
+                <span class="am-navbar-label">信息</span>
+            </a>
+        </li>
+        <li>
+            <a href="/index/user">
+                <img src="__CDN__/assets/frontend/img/user.png" />
+                <span class="am-navbar-label">我的</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>智能AR系统</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+    <style type="text/css">
+        div[data-html="taskRed"] .am-form-group:nth-child(1), div[data-html="taskRed"] .am-form-group:nth-child(2){
+            border-bottom: none;
+        }
+        div[data-html="taskRed"] .am-form-group{
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+<!-- Header -->
+<header data-am-widget="header" class="am-header am-header-default">
+    <div class="am-header-left am-header-nav">
+        <a href="javascript:void(0);" onclick="javascript:history.back(-1);return false;"><img src="__CDN__/assets/frontend/img/icon-back-act.png"></a>
+    </div>
+    <h1 class="am-header-title">
+        <a href="#title-link">处罚详情</a>
+    </h1>
+</header>
+<!-- Content -->
+<div class="wapper" data-html="taskRed">
+    <div class="am-margin-sm">
+        <form class="am-form am-form-horizontal ">
+            <div class="am-form-group">
+                <label class="am-u-sm-3 am-form-label">违反条款：</label>
+                <div class="am-u-sm-9 am-padding-left-0">
+                    <input type="text" value="{$punish->violate}" readonly="readonly">
+                </div>
+            </div>
+            <div class="am-form-group">
+                <label class="am-u-sm-3 am-form-label">处罚金额：</label>
+                <div class="am-u-sm-9 am-padding-left-0">
+                    <input type="text" value="{$punish->amount}" name="money" readonly="readonly">
+                </div>
+            </div>
+            {if condition="$punish->status == 1 "}
+            <div class="am-padding-sm am-text-center">
+                <a href="/index/punish/accept?id={$punish->id}"> <button type="button" class="am-btn am-btn-primary am-btn-xs am-radius am-padding-left am-padding-right am-margin-right" id="agree">接受</button></a>
+                <a href="/index/punish/appeal?id={$punish->id}"> <button type="button" class="am-btn am-btn-default am-btn-xs am-radius am-padding-left am-padding-right" id="complain">申诉</button></a>
+            </div>
+            {elseif condition="$punish->status==2 and ($punish->appeal && $punish->appeal->status == 3) " /}
+            <div class="am-padding-sm am-text-center">
+                <a href="/index/punish/accept?id={$punish->id}"> <button type="button" class="am-btn am-btn-primary am-btn-xs am-radius am-padding-left am-padding-right " id="agree">接受</button></a>
+            </div>
+            {else}
+            <div class="am-padding-sm am-padding-top-0 am-text-right am-text-{$punish->status==2?'warning':'primary'}">{$punish->status==2?'受理中':'已完成'}</div>
+            {/if}
+        </form>
+    </div>
+    <div class="am-margin-top-xs">
+        <div class="border-b am-text-center am-padding-sm">详细内容</div>
+        <div class="am-margin-sm">
+            {$punish->content}
+<!--            <img src="__CDN__/assets/frontend/img/slider1.jpg" width="100%">-->
+<!--            <div class="am-text-right am-margin-top-sm">-->
+<!--                <p>社群网</p>-->
+<!--                <p>2019/11/11</p>-->
+<!--            </div>-->
+        </div>
+    </div>
+</div>
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+<script src="__CDN__/assets/frontend/plugins/layer/layer.js"></script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>智能AR系统</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+</head>
+
+<body>
+<!-- Header -->
+<header data-am-widget="header" class="am-header am-header-default">
+    <div class="am-header-left am-header-nav">
+        <a href="javascript:void(0);" onclick="javascript:history.back(-1);return false;"><img
+                src="__CDN__/assets/frontend/img/icon-back-act.png"></a>
+    </div>
+    <h1 class="am-header-title">
+        <a href="#title-link">我的钱包</a>
+    </h1>
+</header>
+<!-- Content -->
+<div class="wapper" data-html="wallet">
+    <div class="wallet-head-bg am-text-center am-padding-sm">
+        <div class="am-text-white">
+            <p class="am-text-xxl">{$user->account->balance} USDT</p>
+            <p>当前余额</p>
+        </div>
+        <ul class="am-list am-avg-sm-2 am-margin-bottom-0 am-margin-top-sm am-margin-bottom-sm">
+            <li><a href="/index/account/recharge">充值</a></li>
+            <li><a href="/index/account/withdraw">提现</a></li>
+        </ul>
+    </div>
+    <div class="am-margin-bottom-xs">
+        <ul class="am-avg-sm-4 am-text-center am-bg-white am-padding-top-xs am-padding-bottom-xs">
+            <li>
+                <div>充值</div>
+                <div>{$userAccountLog[2]}</div>
+            </li>
+            <li>
+                <div>提现</div>
+                <div>{$userAccountLog[2]}</div>
+            </li>
+            <li>
+                <div>处罚</div>
+                <div>{$userAccountLog[4]}</div>
+            </li>
+            <li>
+                <div>奖励</div>
+                <div>{$userAccountLog[3]}</div>
+            </li>
+        </ul>
+    </div>
+    <ul class="am-list am-list-static am-margin-0">
+        <li onclick="window.location.href='/index/account/log?type=1'">
+            <span>充值记录</span>
+            <span class="am-fr am-link-muted"><i class="am-icon am-icon-angle-right"></i></span>
+        </li>
+        <li onclick="window.location.href='/index/account/log?type=2'">
+            <span>提现记录</span>
+            <span class="am-fr am-link-muted"><i class="am-icon am-icon-angle-right"></i></span>
+        </li>
+        <li onclick="window.location.href='/index/account/log?type=3'">
+            <span>奖励记录</span>
+            <span class="am-fr am-link-muted"><i class="am-icon am-icon-angle-right"></i></span>
+        </li>
+        <li onclick="window.location.href='/index/account/log?type=4'">
+            <span>处罚记录</span>
+            <span class="am-fr am-link-muted"><i class="am-icon am-icon-angle-right"></i></span>
+        </li>
+    </ul>
+</div>
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+</body>
+</html>

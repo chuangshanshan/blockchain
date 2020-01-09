@@ -1,0 +1,79 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>智能AR系统</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+</head>
+
+<body class="am-bg-white">
+<!-- Content -->
+<div class="wapper am-padding-top-0" data-html="testCard">
+    <div class="am-padding-sm">
+        <ul class="am-list am-avg-sm-8" id="answer_result">
+            <li class="active"><span>1</span></li>
+            <li><span>2</span></li>
+            <li><span>3</span></li>
+            <li><span>4</span></li>
+            <li><span>5</span></li>
+            <li><span>6</span></li>
+            <li><span>7</span></li>
+            <li><span>8</span></li>
+            <li><span>9</span></li>
+            <li><span>10</span></li>
+            <li><span>11</span></li>
+        </ul>
+        <div class="btn-box">
+            <input type="button" class="am-btn am-btn-block am-btn-sm am-btn-primary am-radius" id="submit"
+                   value="交卷并查看结果">
+        </div>
+    </div>
+</div>
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+<script src="__CDN__/assets/frontend/plugins/layer/layer.js"></script>
+<script>
+    var eid = parent.layer.methodConfig.data.eid;
+    var answer = parent.layer.methodConfig.data.answer;
+    var answerResultHtml = '';
+    var i = 1
+    var answerAll = true;
+    for (var j in answer) {
+        if (!answer[j]) {
+            answerAll = false;
+        }
+        answerResultHtml += '<li ' + (answer[j] ? 'class="active"' : '') + '><span>' + i + '</span></li>';
+        i++;
+    }
+    $('#answer_result').html(answerResultHtml);
+    $('#submit').click(function () {
+        if(answerAll){
+            var parentIndex = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(parentIndex);
+            parent.submitExamination();
+        }else{
+            layer.confirm('你还有题目未完成，确定要交卷吗？', {
+                title: "温馨提示",
+                btn: ["确定", "取消"],
+                closeBtn: 0,
+            }, function (index) {
+                //提交
+                var parentIndex = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(parentIndex);
+                parent.submitExamination();
+            }, function (index) {
+                layer.close(index);
+            });
+        }
+
+    })
+</script>
+</body>
+</html>

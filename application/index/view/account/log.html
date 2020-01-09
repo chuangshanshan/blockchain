@@ -1,0 +1,109 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>1401</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+</head>
+
+<body>
+<!-- Header -->
+<header data-am-widget="header" class="am-header am-header-default">
+    <div class="am-header-left am-header-nav">
+        <a href="javascript:void(0);" onclick="javascript:history.back(-1);return false;">
+            <img class="am-header-icon-custom" src="__CDN__/assets/frontend/img/icon-back-act.png">
+        </a>
+    </div>
+    <h1 class="am-header-title">
+        <a href="#title-link">{$title}</a>
+    </h1>
+</header>
+<!-- Content -->
+<div class="wapper">
+    <table class="am-table am-bg-white am-text-center am-margin-bottom-0 am-thead-bg">
+        <thead>
+        <tr>
+            <th>余额</th>
+            <th>{$logAccountTitle}</th>
+            <th>变更时间</th>
+        </tr>
+        </thead>
+        <tbody class="account-log">
+        {if $userAccountLogs.data}
+        {foreach $userAccountLogs.data as $accountLog}
+        <tr>
+            <td>{$accountLog.before_balance}</td>
+            <td>{$accountLog.amount}</td>
+            <td>{$accountLog.trade_time}</td>
+        </tr>
+        {/foreach}
+        {else}
+        <tr>
+            <td colspan="3">暂无数据！！！</td>
+        </tr>
+        {/if}
+        </tbody>
+    </table>
+    <div class="am-alert tips-text am-text-center">我也是有底线的</div>
+</div>
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+<script type="text/javascript">
+    var p = 1, page = '{$userAccountLogs.last_page}';  //p当前页,page后台传递总页数
+    //滚动分页
+    window.onscroll = function () {
+        var top = document.body.scrollTop || document.documentElement.scrollTop;
+        var height = document.body.scrollHeight || document.documentElement.scrollHeight;
+        if ((top + window.innerHeight) >= height - 49) {
+            p = p + 1;
+            if (p > page) {
+                p = page;
+                $('.tips-text').show();
+                return;
+            }
+            //从后台获取列表数据
+            $.ajax({
+                //请求方式
+                type: 'GET',
+                //发送请求的地址
+                url: window.location.href,
+                //服务器返回的数据类型
+                dataType: 'json',
+                //发送到服务器的数据，对象必须为key/value的格式，jquery会自动转换为字符串格式
+                data: {page: p},
+                success: function (data) {
+                    if (data.code == 1) {
+                        if (data.data) {
+                            var appendHtml = '';
+                            for (var i in data.data) {
+                                var accountLog = data.data[i];
+                                appendHtml += '<tr>\n' +
+                                    '            <td>' + accountLog.before_balance + '</td>\n' +
+                                    '            <td>' + accountLog.amount + '</td>\n' +
+                                    '            <td>' + accountLog.trade_time + '</td>\n' +
+                                    '        </tr>';
+                            }
+                            $('.account-log').append(appendHtml);
+                        }
+                    } else {
+                        layer.msg('加载失败');
+                    }
+                },
+                error: function (jqXHR) {
+                    //请求失败函数内容
+                    layer.msg('加载失败');
+                }
+            });
+        }
+    }
+
+</script>
+</body>
+</html>

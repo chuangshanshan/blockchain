@@ -1,0 +1,93 @@
+<!doctype html>
+
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>智能AR系统</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+</head>
+
+<body>
+<!-- Header -->
+<header data-am-widget="header" class="am-header am-header-default">
+    <div class="am-header-left am-header-nav">
+        <a href="javascript:void(0);" onclick="javascript:history.back(-1);return false;">
+            <img class="am-header-icon-custom" src="__CDN__/assets/frontend/img/icon-back-act.png">
+        </a>
+    </div>
+    <h1 class="am-header-title">
+        <a href="#title-link">意见反馈</a>
+    </h1>
+</header>
+<!-- Content -->
+<div class="wapper" data-html="form">
+    <div class="am-padding-top-sm">
+        <form class="am-form am-form-horizontal ">
+            <div class="am-form-group am-bg-white">
+                <textarea class="" rows="5" placeholder="必填,详细反馈"></textarea>
+            </div>
+            <div class="am-form-group am-bg-white am-padding-top-0 am-padding-bottom-0">
+                <input type="text" value="" name="linktype" placeholder="QQ,邮件或者电话">
+            </div>
+            <div class="am-form-group am-bg-white am-text-xs am-link-muted">你的联系方式有助于我们沟通和解决问题，仅工作人员可见</div>
+            <div class="am-form-group am-bg-white am-text-xs am-link-muted">客服电话:{$site.service_tel ?? ''}</div>
+            <div class="am-padding-sm am-margin-top">
+                <button type="button" class="am-btn am-btn-primary am-btn-block am-radius" id="submit">提交</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+<script src="__CDN__/assets/frontend/plugins/layer/layer.js"></script>
+<script>
+    var __token__ = '{$Request.token}';
+    //注册
+    $('#submit').click(function(){
+        var remark = $('textarea').val(),
+            type = $('input[name=linktype]').val();
+
+        if(remark == "") {
+            layer.msg('请填写详细反馈!',{time : 1500});
+            return;
+        }
+        if(type == "") {
+            layer.msg('请填写联系方式!',{time : 1500});
+            return;
+        }
+        //表单提交
+        $.ajax({
+            //请求方式
+            type: 'POST',
+            //发送请求的地址
+            url: '/index/feedback',
+            //服务器返回的数据类型
+            dataType: 'json',
+            //发送到服务器的数据，对象必须为key/value的格式，jquery会自动转换为字符串格式
+            data: {content: remark, contact: type, __token__: __token__},
+            success: function (data) {
+                if (data.code == 1) {
+                    layer.msg('提交成功',{time : 1500});
+                    //请求成功函数内容
+                    window.location.href = '/index/user';
+                } else {
+                    layer.msg('提交失败,' + data.msg);
+                    __token__ = data.data.token;
+                }
+            },
+            error: function (jqXHR) {
+                //请求失败函数内容
+                layer.msg('提交失败');
+            }
+        });
+    })
+</script>
+</body>
+</html>

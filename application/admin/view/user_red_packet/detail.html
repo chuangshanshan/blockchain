@@ -1,0 +1,50 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>{:__('Title')}</th>
+            <th>{:__('内容')}</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>用户手机：</td>
+            <td>{$row->user->mobile}</td>
+        </tr>
+        <tr>
+            <td>社群名称</td>
+            <td>{$row.association_name}</td>
+        </tr>
+        <tr>
+            <td>红包金额</td>
+            <td>{$row.amount}</td>
+        </tr>
+        <tr>
+            <td>红包截图</td>
+            <td><img src="{$row.screenshot_image}" width="100" height="100" alt=""></td>
+        </tr>
+        <tr>
+            <td>是否分享</td>
+            <td>{$row.is_shared == 1 ? '已分享' : '未分享' }</td>
+        </tr>
+        <tr>
+            <td>创建时间</td>
+            <td>{$row.createtime|date='Y-m-d H:i',###}</td>
+        </tr>
+
+        </tbody>
+    </table>
+    <input type="hidden" id="status" name="status" value="">
+    <div class="hide layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            {if condition="($row.audit_status == 0)  "}
+            <button type="submit" class="btn btn-success btn-embossed " onclick="$('#status').val(1);$('from').submit();Layer.closeAll();">{:__('通过')}</button>
+            <button type="submit" class="btn btn-primary btn-embossed btn-close" onclick="$('#status').val(2);$('from').submit();Layer.closeAll();">{:__('拒绝')}</button>
+            {else /}
+            <button type="reset" class="btn btn-primary btn-embossed btn-close" onclick="Layer.closeAll();">{:__('Close')}</button>
+            {/if}
+        </div>
+    </div>
+</form>

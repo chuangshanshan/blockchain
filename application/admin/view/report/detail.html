@@ -1,0 +1,62 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>{:__('Title')}</th>
+            <th>{:__('内容')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>用户</td>
+            <td>{$row->user->username}</td>
+        </tr>
+        <tr>
+            <td>社群名称</td>
+            <td>{$row.association_name}</td>
+        </tr>
+        <tr>
+            <td>社群群主</td>
+            <td>{$row.association_admin}</td>
+        </tr>
+        <tr>
+            <td>小助手</td>
+            <td>{$row.association_aide}</td>
+        </tr>
+        <tr>
+            <td>举报相关人</td>
+            <td>{$row.accused_user}</td>
+        </tr>
+        <tr>
+            <td>截图</td>
+            <td>
+                {foreach $row.screenshot_image as $screenshot_image}
+                <img class="am-img" src="{$screenshot_image}" width="100" height="100">
+                {/foreach}
+            </td>
+        </tr>
+        <tr>
+            <td>详细内容</td>
+            <td>{$row.content}</td>
+        </tr>
+        <tr>
+            <td>状态</td>
+            <td>{$row.status_text}</td>
+        </tr>
+        <tr>
+            <td>举报时间</td>
+            <td>{$row.createtime|date='Y-m-d H:i:s',###}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="hide layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            {if condition="($row.status == 0)  "}
+            <button type="submit" class="btn btn-success btn-embossed " onclick="Layer.closeAll();">{:__('已处理')}</button>
+            {/if}
+            <button type="reset" class="btn btn-primary btn-embossed btn-close" onclick="Layer.closeAll();">{:__('Close')}</button>
+
+        </div>
+    </div>
+</form>

@@ -1,0 +1,65 @@
+<!doctype html>
+
+
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>智能AR系统</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+</head>
+
+<body class="am-bg-white">
+<!-- Header -->
+<header data-am-widget="header" class="am-header am-header-default">
+    <div class="am-header-left am-header-nav">
+        <a href="/index/examination"><img src="__CDN__/assets/frontend/img/icon-back-act.png"></a>
+    </div>
+    <h1 class="am-header-title">
+        <a href="#title-link">练习报告</a>
+    </h1>
+</header>
+<!-- Content -->
+<div class="wapper" data-html="testResult">
+    <div class="am-padding-sm border-b am-link-muted am-text-xs">
+        <div>考卷：<span>{$examination->examinationpaper->name}</span></div>
+        <div>交卷时间：{$examination->end_time|date='Y-m-d H:i:s',###}</div>
+    </div>
+    <div class="am-padding-top-lg">
+        <div class="am-padding-bottom-sm">
+            <div class="title-bar">答对题目数</div>
+        </div>
+        <div class="am-text-center am-padding-top am-padding-bottom-sm pos-re">
+            <div class="circlechart" data-percentage="{$accuracy}">{$accuracy}%</div>
+            <div class="desc">难度：{$examination->examinationpaper->complexity}</div>
+        </div>
+        <div>
+            <ul class="am-list am-avg-sm-5">
+                {volist name='answerResult' id="vo"}
+                <li {$vo.answer != $vo.result?'class="error"':''} ><span>{$i}</span></li>
+                {/volist}
+            </ul>
+        </div>
+    </div>
+    <div class="am-padding-sm">
+        <div class="am-text-default am-padding-bottom-xs">考试情况</div>
+        <div>
+            <p><strong>{$examination->examinationpaper->name}</strong></p>
+            <p class="am-link-muted am-text-xs">共{$totalQuestions}题，答对{$rightResultNum}题，正确率{$accuracy}%，用时{$useMinutes}分钟</p>
+        </div>
+    </div>
+</div>
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+<script src="__CDN__/assets/frontend/js/app.js"></script>
+<script>
+    $('.circlechart').circlechart();
+</script>
+</body>
+</html>

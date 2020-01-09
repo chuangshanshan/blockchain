@@ -1,0 +1,247 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>智能AR系统</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+    <style type="text/css">
+        .am-table thead tr th {
+            background: #CCCCCC;
+            color: #333333;
+        }
+    </style>
+</head>
+
+<body>
+<!-- Header -->
+<header data-am-widget="header" class="am-header am-header-default">
+    <div class="am-header-left am-header-nav">
+        <a href="javascript:void(0);" onclick="javascript:history.back(-1);return false;"><img src="__CDN__/assets/frontend/img/icon-back-act.png"></a>
+    </div>
+    <h1 class="am-header-title">
+        <a href="#title-link">红包任务</a>
+    </h1>
+</header>
+<!-- Content -->
+<div class="wapper" data-html="taskRed">
+    <div class="am-margin-sm">
+        <form class="am-form am-form-horizontal ">
+            <input type="file" id="file" onchange="changeFile()" accept='image/*' value="" style="display: none">
+            <div class="am-form-group">
+                <label class="am-u-sm-3 am-form-label">社群名称：</label>
+                <div class="am-u-sm-9">
+                    <input type="text" value="" name="groupName" placeholder="请输入社群名称">
+                </div>
+            </div>
+            <div class="am-form-group">
+                <label class="am-u-sm-3 am-form-label">红包金额：</label>
+                <div class="am-u-sm-9">
+                    <input type="text" value="" name="money" placeholder="请输入红包金额" onkeyup="ZW.Common.onlyPrice(this);">
+                </div>
+            </div>
+            <div class="am-form-group">
+                <label class="am-u-sm-3 am-form-label">红包截图：</label>
+                <div class="am-u-sm-9">
+                    <img class="redImg" src="__CDN__/assets/frontend/img/addImg.png" width="100" onclick="uploadFile()" >
+                </div>
+                <!-- 上传方式选择 -->
+                <div class="am-modal-actions" id="my-actions">
+                    <div class="am-modal-actions-group">
+                        <ul class="am-list">
+                            <li class="am-modal-actions-header">从相册选择</li>
+                            <li class="am-modal-actions-header">拍照</li>
+                        </ul>
+                    </div>
+                    <div class="am-modal-actions-group">
+                        <button class="am-btn am-btn-secondary am-btn-block" data-am-modal-close>取消</button>
+                    </div>
+                </div>
+            </div>
+            <div class="am-form-group">
+                <label class="am-u-sm-2 am-form-label">分享：</label>
+                <div class="am-u-sm-10">
+                    <label class="am-radio-inline">
+                        <input type="radio" name="type" value="1"> 已分享
+                    </label>
+                    <label class="am-radio-inline">
+                        <input type="radio" name="type" value="0" checked="checked"> 未分享
+                    </label>
+                </div>
+            </div>
+            <div class="am-padding-sm am-text-right">
+                <button type="button" class="am-btn am-btn-primary am-btn-sm am-radius am-padding-left am-padding-right" id="submit">确认</button>
+            </div>
+        </form>
+    </div>
+    <div class="am-margin-top">
+        <table class="am-table am-bg-white am-text-center am-margin-bottom-0">
+            <thead>
+            <tr>
+                <th>金额</th>
+                <th>日期</th>
+                <th>分享</th>
+            </tr>
+            </thead>
+            <tbody class="red-packet">
+            {if $redPackets.data}
+            {foreach $redPackets.data as $redPacket}
+            <tr>
+                <td>{$redPacket.amount}</td>
+                <td>{$redPacket.createtime}</td>
+                <td class="am-text-{$redPacket.is_shared?'primary':'danger'}">{$redPacket.is_shared?'已':'未'}分享</td>
+            </tr>
+            {/foreach}
+            {else}
+            <tr>
+                <td colspan="3">暂无数据</td>
+            </tr>
+            {/if}
+            </tbody>
+        </table>
+        <div class="am-alert tips-text am-text-center">我也是有底线的</div>
+    </div>
+</div>
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+<script src="__CDN__/assets/frontend/plugins/layer/layer.js"></script>
+<script src="__CDN__/assets/frontend/js/app.js"></script>
+<script>
+    //分页
+    var p = 1, page = '{$redPackets.last_page}';  //p当前页,page后台传递总页数
+    //滚动分页
+    window.onscroll = function () {
+        var top = document.body.scrollTop || document.documentElement.scrollTop;
+        var height = document.body.scrollHeight || document.documentElement.scrollHeight;
+        if ((top + window.innerHeight) >= height - 49) {
+            p = p + 1;
+            if (p > page) {
+                p = page;
+                $('.tips-text').show();
+                return;
+            }
+            //从后台获取列表数据
+            $.ajax({
+                //请求方式
+                type: 'GET',
+                //发送请求的地址
+                url: window.location.href,
+                //服务器返回的数据类型
+                dataType: 'json',
+                //发送到服务器的数据，对象必须为key/value的格式，jquery会自动转换为字符串格式
+                data: {page: p},
+                success: function (data) {
+                    if (data.code == 1) {
+                        if (data.data) {
+                            var appendHtml = '';
+                            for (var i in data.data) {
+                                var redPacket = data.data[i];
+                                appendHtml += '<tr>\n' +
+                                    '                <td>' + redPacket.amount+'</td>\n' +
+                                    '                <td>' + redPacket.createtime + '</td>\n' +
+                                    '                <td class="am-text-'+(redPacket.is_shared?'primary':'danger')+'">' + (redPacket.is_shared?'已':'未') + '分享</td>\n' +
+                                    '            </tr>';
+                            }
+                            $('.red-packet').append(appendHtml);
+                        }
+                    } else {
+                        layer.msg('加载失败');
+                    }
+                },
+                error: function (jqXHR) {
+                    //请求失败函数内容
+                    layer.msg('加载失败');
+                }
+            });
+        }
+    }
+    var __token__='{$Request.token}';
+    $('#submit').click(function(){
+        var name = $('input[name=groupName]').val(),
+            money = $('input[name=money]').val(),
+            redImg = $('.redImg').attr('src'),
+            type = $('input[type="radio"]:checked').val();
+
+        if(name == ""){
+            layer.msg('请输入社群名称',{time:1500});
+            return;
+        }
+        if(money == ""){
+            layer.msg('请输入红包金额',{time:1500});
+            return;
+        }
+        if(redImg == "" || redImg == '/assets/frontend/img/addImg.png'){
+            layer.msg('请上传红包截图',{time:1500});
+            return;
+        }
+        //提交
+        $.ajax({
+            //请求方式
+            type: 'POST',
+            //发送请求的地址
+            url: '/index/red_packet/add',
+            //服务器返回的数据类型
+            dataType: 'json',
+            //发送到服务器的数据，对象必须为key/value的格式，jquery会自动转换为字符串格式
+            data: {association_name:name,
+                amount:money,
+                is_shared:type,
+                screenshot_image:redImg,
+                __token__:__token__
+            },
+            success: function (data) {
+                if(data.code ==1){
+                    layer.msg('新增成功');
+                    //请求成功函数内容
+                    window.location.reload();
+                }else{
+                    layer.msg('新增失败,'+data.msg);
+                    __token__=data.data.token;
+                }
+            },
+            error: function (jqXHR) {
+                //请求失败函数内容
+                layer.msg('新增失败');
+            }
+        });
+    })
+    function uploadFile() {
+        $('#file').click();
+    }
+
+    function changeFile() {
+        var formData = new FormData();
+        var file= $('#file').get(0).files[0];
+        if (!file){
+            return;
+        }
+        formData.append('file',file);
+        $.ajax({
+            type: 'POST',
+            url: '/index/ajax/upload',
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (res) {
+                if(res.code == 1){
+                    layer.msg('上传成功');
+                    $('.redImg').attr('src',res.data.url);
+                }else{
+                    layer.msg(res.msg, {time: 1500});
+                }
+            },
+            error: function (error) {
+                layer.msg('上传失败！', {time: 1500});
+            }
+        });
+    }
+</script>
+</body>
+</html>

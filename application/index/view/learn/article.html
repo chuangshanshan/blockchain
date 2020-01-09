@@ -1,0 +1,158 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>智能AR系统</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+</head>
+<body>
+<!-- Content -->
+<div data-html="study">
+    <div data-am-widget="tabs" class="am-tabs am-tabs-default am-margin-0">
+        <ul class="am-tabs-nav am-cf border-b">
+            <li  onclick="window.location.href='/index/learn?type=1'">
+                <a href="[data-tab-panel-0]">视频</a>
+            </li>
+
+            <li onclick="window.location.href='/index/learn?type=2'">
+                <a href="">音频</a>
+            </li>
+            <li class="am-active">
+                <a href="[data-tab-panel-0]">文章</a>
+            </li>
+            <li onclick="window.location.href='/index/learn?type=4'">
+                <a href="/index/learn?type=4">历史</a>
+            </li>
+        </ul>
+        <div class="am-tabs-bd">
+            <div data-tab-panel-0 class="am-tab-panel am-active">
+                <ul class="am-list am-list-news am-margin-bottom-0">
+                    {foreach $articles.data as $article}
+                    <li>
+                        <a href="detail?id={$article.id}" class="am-text-truncate">{$article.title}</a>
+                    </li>
+                    {/foreach}
+                </ul>
+            </div>
+        </div>
+        <div class="am-alert tips-text am-text-center">我也是有底线的</div>
+    </div>
+</div>
+</div>
+<!-- Footer-Menu -->
+<div data-am-widget="navbar" class="am-navbar am-cf am-navbar-default" id="footer-nav">
+    <ul class="am-navbar-nav am-cf am-avg-sm-4">
+        <li>
+            <a href="/index">
+                <img src="__CDN__/assets/frontend/img/home.png" />
+                <span class="am-navbar-label">首页</span>
+            </a>
+        </li>
+        <li class="am-active">
+            <a href="/index/learn">
+                <img src="__CDN__/assets/frontend/img/study_a.png" />
+                <span class="am-navbar-label">学习</span>
+            </a>
+        </li>
+        <li>
+            <a href="/index/examination">
+                <img src="__CDN__/assets/frontend/img/test.png" />
+                <span class="am-navbar-label">考试</span>
+            </a>
+        </li>
+        <li>
+            <a href="/index/notice">
+                <img src="__CDN__/assets/frontend/img/message.png" />
+                <span class="am-navbar-label">信息</span>
+            </a>
+        </li>
+        <li>
+            <a href="/index/user">
+                <img src="__CDN__/assets/frontend/img/user.png" />
+                <span class="am-navbar-label">我的</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+<script>
+    var a = 0;
+    $(".audio_play_area").click(function() {
+        a++;
+        if (a % 2 != 0) {
+            $(".icon_audiodefault").css({
+                "display": "none"
+            });
+            $(".icon_audioplaying").css({
+                "display": "block"
+            });
+            console.log(a);
+        }
+        if (a % 2 == 0) {
+            console.log(a);
+            $(".icon_audiodefault").css({
+                "display": "block"
+            });
+            $(".icon_audioplaying").css({
+                "display": "none"
+            });
+        }
+    })
+    //分页
+    var p = 1, page='{$articles.last_page}';  //p当前页,page后台传递总页数
+    //滚动分页
+    window.onscroll = function(){
+        var top = document.body.scrollTop || document.documentElement.scrollTop;
+        var height = document.body.scrollHeight || document.documentElement.scrollHeight;
+        if((top + window.innerHeight) >= height-49){
+            p = p + 1;
+            if(p > page){
+                p = page;
+                $('.tips-text').show();
+                return;
+            }
+            //从后台获取列表数据
+            $.ajax({
+                //请求方式
+                type: 'GET',
+                //发送请求的地址
+                url: window.location.href,
+                //服务器返回的数据类型
+                dataType: 'json',
+                //发送到服务器的数据，对象必须为key/value的格式，jquery会自动转换为字符串格式
+                data: {page: p},
+                success: function (data) {
+                    if(data.code == 1){
+                        if(data.data){
+                            var appendHtml = '';
+                            for(var i in data.data){
+                                var article = data.data[i];
+                                appendHtml += '                    <li>\n' +
+                                    '                        <a href="detail?id='+article.id+'" class="am-text-truncate">'+article.title+'</a>\n' +
+                                    '                    </li>';
+                            }
+                            $('.am-list').append(appendHtml);
+                        }
+                    }else{
+                        layer.msg('加载失败');
+                    }
+                    //请求成功函数内容
+                },
+                error: function (jqXHR) {
+                    //请求失败函数内容
+                    layer.msg('加载失败');
+                }
+            });
+        }
+    }
+</script>
+</body>
+</html>

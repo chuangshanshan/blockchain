@@ -1,0 +1,59 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>{:__('Title')}</th>
+            <th>{:__('内容')}</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>用户手机：</td>
+            <td>{$row->user->mobile}</td>
+        </tr>
+        <tr>
+            <td>钱包地址</td>
+            <td>{$row.wallet_address}</td>
+        </tr>
+        <tr>
+            <td>提币数量</td>
+            <td>{$row.amount}</td>
+        </tr>
+        <tr>
+            <td>手续费</td>
+            <td>{$row.fee}</td>
+        </tr>
+        <tr>
+            <td>实际提币数量</td>
+            <td>{$row.real_amount}</td>
+        </tr>
+        <tr>
+            <td>提币hash</td>
+            <td>{$row.hash_key}</td>
+        </tr>
+
+        <tr>
+            <td>状态</td>
+            <td>{$row.status_text}</td>
+        </tr>
+        <tr>
+            <td>成交时间</td>
+            <td>{$row.traded_time_text|default='无'}</td>
+        </tr>
+
+        </tbody>
+    </table>
+    <input type="hidden" id="status" name="status" value="">
+    <div class="hide layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            {if condition="($row.status == 0)  "}
+            <button type="submit" class="btn btn-success btn-embossed " onclick="$('#status').val(1);$('from').submit();Layer.closeAll();">{:__('通过')}</button>
+            <button type="submit" class="btn btn-primary btn-embossed btn-close" onclick="$('#status').val(9);$('from').submit();Layer.closeAll();">{:__('拒绝')}</button>
+            {else /}
+            <button type="reset" class="btn btn-primary btn-embossed btn-close" onclick="Layer.closeAll();">{:__('Close')}</button>
+            {/if}
+        </div>
+    </div>
+</form>

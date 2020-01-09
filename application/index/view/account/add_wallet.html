@@ -1,0 +1,101 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>智能AR系统</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+</head>
+
+<body>
+<!-- Header -->
+<header data-am-widget="header" class="am-header am-header-default">
+    <div class="am-header-left am-header-nav">
+        <a href="javascript:void(0);" onclick="javascript:history.back(-1);return false;">
+            <img class="am-header-icon-custom" src="__CDN__/assets/frontend/img/icon-back-act.png">
+        </a>
+    </div>
+    <h1 class="am-header-title">
+        <a href="#title-link">新增地址</a>
+    </h1>
+</header>
+<!-- Content -->
+<div class="wapper" data-html="form">
+    <div class="am-padding-top-sm">
+        <form class="am-form am-form-horizontal ">
+            <div class="am-form-group am-bg-white">
+                <label class="am-u-sm-3 am-form-label">提币地址</label>
+                <div class="am-u-sm-9">
+                    <input type="text" value="" name="address" placeholder="请填写提币地址">
+                </div>
+            </div>
+            <div class="am-form-group am-bg-white">
+                <label class="am-u-sm-3 am-form-label">地址名称</label>
+                <div class="am-u-sm-9">
+                    <input type="text" value="" name="name" placeholder="请填写地址名称">
+                </div>
+            </div>
+            <div class="am-form-group am-bg-white">
+                <label class="am-u-sm-3 am-form-label">设为默认</label>
+                <div class="am-u-sm-9">
+                    <input type="radio" name="is_default" checked value="1">是
+                    <input type="radio" name="is_default" value="0">否
+                </div>
+            </div>
+            <div class="am-form-group am-margin-top" style="border-bottom: none;">
+                <button type="button" class="am-btn am-btn-block am-btn-primary am-radius" id="submit">提交</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+<script src="__CDN__/assets/frontend/plugins/layer/layer.js"></script>
+<script>
+    var __token__ = '{$Request.token}';
+    //提交
+    $('#submit').click(function () {
+        var address = $('input[name=address]').val(),
+            name = $('input[name=name]').val(),
+            is_default = $('input[name=is_default]:checked').val();
+        if (address == "") {
+            layer.msg('请填写提币地址', {time: 1500});
+            return;
+        }
+        if (name == "") {
+            layer.msg('请填写地址名称', {time: 1500});
+            return;
+        }
+        $.ajax({
+            //请求方式
+            type: 'POST',
+            //发送请求的地址
+            url: '/index/account/addWallet',
+            //服务器返回的数据类型
+            dataType: 'json',
+            //发送到服务器的数据，对象必须为key/value的格式，jquery会自动转换为字符串格式
+            data: {walletName: name, walletAddress: address, isDefault: is_default, __token__: __token__},
+            success: function (data) {
+                if (data.code == 1) {
+                    layer.msg('添加成功', {time: 1000});
+                    window.location.href = '/index/account/walletAddress'
+                } else {
+                    layer.msg( data.msg, {time: 1500});
+                    __token__ = data.data.token;
+                }
+            },
+            error: function (jqXHR) {
+                //请求失败函数内容
+                layer.msg('提交失败');
+            }
+        });
+    })
+</script>
+</body>
+</html>

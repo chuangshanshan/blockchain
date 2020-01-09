@@ -1,0 +1,104 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>智能AR系统</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+</head>
+
+<body>
+<!-- Header -->
+<header data-am-widget="header" class="am-header am-header-default">
+    <div class="am-header-left am-header-nav">
+        <a href="javascript:void(0);" onclick="javascript:history.back(-1);return false;">
+            <img class="am-header-icon-custom" src="__CDN__/assets/frontend/img/icon-back-act.png">
+        </a>
+    </div>
+    <h1 class="am-header-title">
+        <a href="#title-link">处罚处理</a>
+    </h1>
+</header>
+<!-- Content -->
+<div class="wapper">
+    <div>
+        <ul class="am-list am-list-static am-list-border">
+            {if $punishs.data}
+            {foreach $punishs.data as $punish}
+            <li class="am-g" onclick="window.location.href='/index/punish/detail?id={$punish.id}'">
+                <div class="am-u-sm-6 am-ellipsis am-padding-left-0">{$punish.title}</div>
+                <span class="am-u-sm-6 am-padding-0 am-text-right">
+							<em class="am-link-{$punish.status==1?'danger':($punish.status==2?'primary':'muted')}">{$punish.status==1?'未处理':($punish.status==2?'受理中':'已处理')}</em>
+							<i class="am-icon am-icon-angle-right am-padding-left-sm am-link-muted"></i>
+						</span>
+            </li>
+            {/foreach}
+            {else}
+            <li class="am-text-center">未查到数据!!!</li>
+            {/if}
+        </ul>
+        <div class="am-alert tips-text am-text-center">我也是有底线的</div>
+    </div>
+</div>
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+<script>
+    //分页
+    var p = 1, page = '{$punishs.last_page}';  //p当前页,page后台传递总页数
+    //滚动分页
+    window.onscroll = function () {
+        var top = document.body.scrollTop || document.documentElement.scrollTop;
+        var height = document.body.scrollHeight || document.documentElement.scrollHeight;
+        if ((top + window.innerHeight) >= height - 49) {
+            p = p + 1;
+            if (p > page) {
+                p = page;
+                $('.tips-text').show();
+                return;
+            }
+            //从后台获取列表数据
+            $.ajax({
+                //请求方式
+                type: 'GET',
+                //发送请求的地址
+                url: window.location.href,
+                //服务器返回的数据类型
+                dataType: 'json',
+                //发送到服务器的数据，对象必须为key/value的格式，jquery会自动转换为字符串格式
+                data: {page: p},
+                success: function (data) {
+                    if (data.code == 1) {
+                        if (data.data) {
+                            var appendHtml = '';
+                            for (var i in data.data) {
+                                var punish = data.data[i];
+                                appendHtml += '<li class="am-g" onclick="window.location.href=\'/index/punish/detail?id=' + punish.id + '\'">\n' +
+                                    '                <div class="am-u-sm-6 am-ellipsis am-padding-left-0">' + punish.title + '</div>\n' +
+                                    '                <span class="am-u-sm-6 am-padding-0 am-text-right">\n' +
+                                    '\t\t\t\t\t\t\t<em class="am-link-'+(punish.status == 1 ? 'danger' : (punish.status == 2 ? 'primary' : 'muted') )+ '">' + (punish.status == 1 ? '未处理' :(punish.status == 2 ? '受理中' : '已处理')) + '</em>\n' +
+                                    '\t\t\t\t\t\t\t<i class="am-icon am-icon-angle-right am-padding-left-sm am-link-muted"></i>\n' +
+                                    '\t\t\t\t\t\t</span>\n' +
+                                    '            </li>';
+                            }
+                            $('.am-list').append(appendHtml);
+                        }
+                    } else {
+                        layer.msg('加载失败');
+                    }
+                },
+                error: function (jqXHR) {
+                    //请求失败函数内容
+                    layer.msg('加载失败');
+                }
+            });
+        }
+    }
+</script>
+</body>
+</html>

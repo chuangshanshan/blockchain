@@ -1,0 +1,67 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>智能AR系统</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/ztree/zTreeStyle.css">
+</head>
+
+<body class="am-bg-white">
+<!-- Header -->
+<header data-am-widget="header" class="am-header am-header-default">
+    <div class="am-header-left am-header-nav">
+        <a href="javascript:void(0);" onclick="javascript:history.back(-1);return false;"><img src="__CDN__/assets/frontend/img/icon-back-act.png"></a>
+    </div>
+    <h1 class="am-header-title">
+        <a href="#title-link">我的节点</a>
+    </h1>
+</header>
+<!-- Content -->
+<div class="wapper">
+    <div class="am-padding-sm">
+        <ul id="tree" class="ztree"></ul>
+    </div>
+</div>
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+<script src="__CDN__/assets/frontend/ztree/jquery.ztree.core.min.js"></script>
+<script>
+    // ajax 抓取页面
+    var __token__ = '{$Request.token}';
+
+    $.ajax({
+        type : "POST",
+        url:"/index/user/node",
+        dataType: 'json',
+        data:{
+            __token__:__token__,
+        },
+        success: function(e){
+            $("#tree").html('');
+            var setting = {
+                data: {
+                    simpleData: {
+                        enable: true
+                    }
+                }
+            };
+            for (i in e){
+                e[i].icon='/assets/frontend/img/person.png'
+            }
+            var zNodes = e;
+            jQuery.fn.zTree.init($("#tree"), setting, zNodes);
+            jQuery.fn.zTree.getZTreeObj("tree").expandAll(true);
+        }
+    });
+
+</script>
+</body>
+</html>

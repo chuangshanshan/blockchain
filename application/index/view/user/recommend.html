@@ -1,0 +1,71 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>1401</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+</head>
+
+<body>
+<!-- Header -->
+<header data-am-widget="header" class="am-header am-header-default">
+    <div class="am-header-left am-header-nav">
+        <a href="javascript:void(0);" onclick="javascript:history.back(-1);return false;">
+            <img class="am-header-icon-custom" src="__CDN__/assets/frontend/img/icon-back-act.png">
+        </a>
+    </div>
+    <h1 class="am-header-title">
+        <a href="#title-link">我的直推</a>
+    </h1>
+</header>
+<!-- Content -->
+<div class="wapper">
+    <table class="am-table am-bg-white am-text-center am-margin-bottom-0 am-thead-bg">
+        <thead>
+        <tr>
+            <th>账号</th>
+            <th>手机号</th>
+            <th>微信号</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $recommends as $recommend}
+        <tr>
+            <td>{$recommend.number}</td>
+            <td>{$recommend.mobile}</td>
+            <td>{$recommend.wechat}</td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    <div class="am-alert tips-text am-text-center">我也是有底线的</div>
+</div>
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+<script type="text/javascript">
+    var p = 1, page;  //p当前页,page后台传递总页数
+    //滚动分页
+    window.onscroll = function(){
+        var top = document.body.scrollTop || document.documentElement.scrollTop;
+        var height = document.body.scrollHeight || document.documentElement.scrollHeight;
+        if((top + window.innerHeight) >= height-49){
+            p = p + 1;
+            if(p > page){
+                p = page;
+                $('.tips-text').show();
+                return;
+            }
+            //从后台获取列表数据
+        }
+    }
+
+</script>
+</body>
+</html>

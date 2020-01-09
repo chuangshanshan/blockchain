@@ -1,0 +1,50 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>{:__('Title')}</th>
+        <th>{:__('内容')}</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr>
+        <td>用户：</td>
+        <td>{$row->user->username}</td>
+    </tr>
+    <tr>
+        <td>惩罚标题</td>
+        <td>{$row->punish->title}</td>
+    </tr>
+    <tr>
+        <td>申诉内容</td>
+        <td>{$row.content}</td>
+    </tr>
+    <tr>
+        <td>申诉图片</td>
+        <td><img src="{$row.image}" alt=""></td>
+    </tr>
+    <tr>
+        <td>申诉状态</td>
+        <td>{$row.status_text}</td>
+    </tr>
+    <tr>
+        <td>申诉时间</td>
+        <td>{$row.createtime|date='Y-m-d H:i:s',###}</td>
+    </tr>
+
+    </tbody>
+</table>
+    <input type="hidden" id="status" name="status" value="">
+<div class="hide layer-footer">
+    <label class="control-label col-xs-12 col-sm-2"></label>
+    <div class="col-xs-12 col-sm-8">
+        {if condition="($row.status == 1)  "}
+        <button type="submit" class="btn btn-success btn-embossed " onclick="$('#status').val(2);$('from').submit();Layer.closeAll();">{:__('通过')}</button>
+        <button type="submit" class="btn btn-primary btn-embossed btn-close" onclick="$('#status').val(3);$('from').submit();Layer.closeAll();">{:__('拒绝')}</button>
+        {else /}
+        <button type="reset" class="btn btn-primary btn-embossed btn-close" onclick="Layer.closeAll();">{:__('Close')}</button>
+        {/if}
+    </div>
+</div>
+</form>

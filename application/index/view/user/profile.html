@@ -1,0 +1,184 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>智能AR系统</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+    <style type="text/css">
+        .userIcon{width: 7rem;height: 7rem;}
+    </style>
+</head>
+
+<body>
+<!-- Header -->
+<header data-am-widget="header" class="am-header am-header-default">
+    <div class="am-header-left am-header-nav">
+        <a href="javascript:void(0);" onclick="javascript:history.back(-1);return false;">
+            <img class="am-header-icon-custom" src="__CDN__/assets/frontend/img/icon-back-act.png">
+        </a>
+    </div>
+    <h1 class="am-header-title">
+        <a href="#title-link">编辑资料</a>
+    </h1>
+    <div class="am-header-right am-header-nav">
+        <a href="#right-link" class="save">
+            <span class="am-header-nav-title am-text-primary">保存</span>
+        </a>
+    </div>
+</header>
+<!-- Content -->
+<div class="wapper" data-html="form">
+    <div class="am-padding-top-sm">
+        <form class="am-form am-form-horizontal ">
+            <input type="file" id="avatar" onchange="changeFile()" accept='image/*' value="" style="display: none">
+            <div class="am-form-group am-text-center">
+                <div class="am-inline-block am-padding-bottom-xs " onclick="uploadFile()" >
+                    <img class="userIcon" src="{$user.avatar|default='/assets/frontend/img/avator.png'}">
+                    <p class="am-padding-top-xs am-link-muted am-text-xs">点击更换头像</p>
+                </div>
+            </div>
+            <div class="am-form-group am-bg-white">
+                <label class="am-u-sm-3 am-form-label">昵称</label>
+                <div class="am-u-sm-7 am-padding-right-0">
+                    <input type="text" class="numlimit" value="{$user.nickname}" name="nickname" maxlength="11" placeholder="请输入昵称">
+                </div>
+                <div class="am-u-sm-2 am-padding-right-0 am-text-right am-padding-top-xs">
+                    <em class="wording">0</em>/<em class="word">11</em>
+                </div>
+            </div>
+            <div class="am-form-group am-bg-white">
+                <label class="am-u-sm-3 am-form-label">账号</label>
+                <div class="am-u-sm-9">
+                    <input type="text" value="{$user.number}" name="account" readonly="readonly">
+                </div>
+            </div>
+            <div class="am-form-group am-bg-white">
+                <label class="am-u-sm-3 am-form-label">手机号</label>
+                <div class="am-u-sm-9">
+                    <input type="text" value="{$user.mobile|substr=0,3}****{$user.mobile|substr=-4,4}" name="mobile" readonly="readonly">
+                </div>
+            </div>
+            <div class="am-form-group am-bg-white">
+                <label class="am-u-sm-3 am-form-label">微信号</label>
+                <div class="am-u-sm-9">
+                    <input type="text" value="{$user.wechat}" name="wechat">
+                </div>
+            </div>
+            <div class="am-form-group am-bg-white">
+                <label class="am-u-sm-3 am-form-label">钱包地址</label>
+                <div class="am-u-sm-9">
+                    <input type="text" value="{$user.wallet}" name="wallet" readonly>
+                </div>
+            </div>
+            <div class="am-form-group am-bg-white">
+                <label class="am-u-sm-3 am-form-label">社群二维码</label>
+                <div class="am-u-sm-9">
+                    <img class="qcodeImg" src="{$qr_code}" width="100">
+                </div>
+            </div>
+            <!-- 上传方式选择 -->
+            <div class="am-modal-actions" id="my-actions">
+                <div class="am-modal-actions-group">
+                    <ul class="am-list">
+                        <li class="am-modal-actions-header">从相册选择</li>
+                        <li class="am-modal-actions-header">拍照</li>
+                    </ul>
+                </div>
+                <div class="am-modal-actions-group">
+                    <button class="am-btn am-btn-secondary am-btn-block" data-am-modal-close>取消</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+<script src="__CDN__/assets/frontend/plugins/layer/layer.js"></script>
+<script>
+    //限制昵称长度
+    $(".numlimit").keyup(function(){
+        var max_len = $(this).attr('maxlength'),
+            len = $(this).val().length;
+        if(len > max_len){
+            $(this).val($(this).val().substring(0,max_len));
+        }
+        var num = max_len - len;
+        if(num >= 0){
+            $(this).parent().next().children('.word').text(num);
+            $(this).parent().next().children('.wording').text(len);
+        }else{
+            $(this).parent().next().children('.wording').text(len-1);
+            $(this).parent().next().children('.word').text(0);
+        }
+    });
+    $(".numlimit").keyup();
+    //保存
+    $('.save').click(function(){
+        var nickname = $('input[name=nickname]').val(),
+            wechat = $('input[name=wechat]').val(),
+            avatar = $('.userIcon').attr('src');
+
+        //提交
+        $.ajax({
+            //请求方式
+            type: 'POST',
+            //发送请求的地址
+            url: '/api/user/profile',
+            //服务器返回的数据类型
+            dataType: 'json',
+            //发送到服务器的数据，对象必须为key/value的格式，jquery会自动转换为字符串格式
+            data: {nickname: nickname, avatar: avatar,wechat:wechat},
+            success: function (data) {
+                if (data.code == 1) {
+                    layer.msg('提交成功',{time:1500});
+                } else {
+                    layer.msg('提交失败,' + data.msg);
+                }
+            },
+            error: function (jqXHR) {
+                //请求失败函数内容
+                layer.msg('提交失败');
+            }
+        });
+    })
+    function uploadFile() {
+        $('#avatar').click();
+    }
+    
+    function changeFile() {
+        var formData = new FormData();
+        var file= $('#avatar').get(0).files[0];
+        if (!file){
+            return;
+        }
+        formData.append('file',file);
+        $.ajax({
+            type: 'POST',
+            url: '/index/ajax/upload',
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (res) {
+                if(res.code == 1){
+                    layer.msg('上传成功');
+                    $('.userIcon').attr('src',res.data.url);
+                }else{
+                    layer.msg(res.msg, {time: 1500});
+                }
+            },
+            error: function (error) {
+                layer.msg('上传失败！', {time: 1500});
+            }
+        });
+    }
+</script>
+</body>
+</html>

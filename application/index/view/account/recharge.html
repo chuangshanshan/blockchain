@@ -1,0 +1,95 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>智能AR系统</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+</head>
+
+<body>
+<!-- Header -->
+<header data-am-widget="header" class="am-header am-header-default">
+    <div class="am-header-left am-header-nav">
+        <a href="javascript:void(0);" onclick="javascript:history.back(-1);return false;">
+            <img class="am-header-icon-custom" src="__CDN__/assets/frontend/img/icon-back-act.png">
+        </a>
+    </div>
+    <h1 class="am-header-title">
+        <a href="#title-link">充值</a>
+    </h1>
+    <div class="am-header-right am-header-nav">
+        <a href="/index/account/log?type=1" class="">
+            <span class="am-header-nav-title">明细</span>
+        </a>
+    </div>
+</header>
+<!-- Content -->
+<div class="wapper" data-html="form">
+    <div class="am-padding-top-sm">
+        <form class="am-form am-form-horizontal ">
+            <div class="am-form-group am-bg-white">
+                <label class="am-form-label am-padding-bottom-sm"></label>
+                <div class="am-text-center">
+                    <img class="am-img" src="{$user.wallet_qrcode}" width="200">
+                    <div class="address am-padding-top-sm am-padding-bottom-sm">{$user.wallet}</div>
+                </div>
+                <div class="am-padding-sm am-text-center">
+                    <input type="button" class="am-btn am-btn-primary am-btn-sm am-radius copy-btn" onclick="copyUrl();"
+                           value="复制地址"/>
+                </div>
+                <div class="am-padding-sm am-text-center">
+                    提示：充值金额必须为<b>150</b>个USDT
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+<script src="__CDN__/assets/frontend/plugins/layer/layer.js"></script>
+<script src="__CDN__/assets/frontend/js/app.js"></script>
+<script>
+    function copyUrl() {
+        var txt = $(".address").html();
+        copy(txt);
+    }
+
+    function copy(message) {
+        var input = document.createElement("input");
+        input.value = message;
+        document.body.appendChild(input);
+        input.select();
+        input.setSelectionRange(0, input.value.length), document.execCommand('Copy');
+        document.body.removeChild(input);
+        layer.msg('复制成功', {time: 1500});
+    }
+
+    $('.am-list li').click(function () {
+        var money = $('input[name=money]').val();
+        if (money == "") {
+            layer.msg("请输入要充值的金额!", {time: 1500});
+            return;
+        }
+        layer.prompt({
+            title: '支付密码',
+            formType: 1,
+            value: '',
+            maxlength: 6,
+            btn: ['确认', '取消']
+        }, function (value, index, elem) {
+            console.log(value); //获取的支付密码
+            layer.close(index);
+            //提交后台
+        });
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!doctype html>
+
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>智能AR系统</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/plugins/swiper/swiper.css" />
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+</head>
+
+<body>
+<!-- Header -->
+<header data-am-widget="header" class="am-header am-header-default">
+    <h1 class="am-header-title">
+        <a href="#title-link">考试</a>
+    </h1>
+</header>
+<!-- Content -->
+<div class="wapper" data-html="index">
+    <!-- slider -->
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            {foreach $ads as $ad}
+            <div class="swiper-slide"><img src="{$ad.image}"></div>
+            {/foreach}
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>
+    <div>
+        <ul class="am-list am-list-static am-list-border">
+            {if $examinationPapers}
+                {foreach $examinationPapers as $examinationPaper}
+                <li class="am-g" onclick="window.location.href='{$examinationPaper.eid?('/index/examination/detail?eid='.$examinationPaper.eid):('/index/examination/answer?epid='.$examinationPaper.id)}'">
+                    <div class="am-u-sm-6 am-ellipsis am-padding-left-0">{$examinationPaper.name}</div>
+                    <span class="am-u-sm-6 am-padding-0 am-text-right am-link-muted">{$examinationPaper.eid?'已考':'未考'}<i class="am-icon am-icon-angle-right am-padding-left-sm"></i></span>
+                </li>
+                {/foreach}
+            {else}
+            <li class="am-text-center">不符合考试条件!!!</li>
+            {/if}
+        </ul>
+    </div>
+</div>
+<!-- Footer-Menu -->
+<div data-am-widget="navbar" class="am-navbar am-cf am-navbar-default" id="footer-nav">
+    <ul class="am-navbar-nav am-cf am-avg-sm-4">
+        <li>
+            <a href="/index">
+                <img src="__CDN__/assets/frontend/img/home.png" />
+                <span class="am-navbar-label">首页</span>
+            </a>
+        </li>
+        <li >
+            <a href="/index/learn">
+                <img src="__CDN__/assets/frontend/img/study.png" />
+                <span class="am-navbar-label">学习</span>
+            </a>
+        </li>
+        <li class="am-active">
+            <a href="javascript:void(0);">
+                <img src="__CDN__/assets/frontend/img/test_a.png" />
+                <span class="am-navbar-label">考试</span>
+            </a>
+        </li>
+        <li>
+            <a href="/index/notice">
+                <img src="__CDN__/assets/frontend/img/message.png" />
+                <span class="am-navbar-label">信息</span>
+            </a>
+        </li>
+        <li>
+            <a href="/index/user">
+                <img src="__CDN__/assets/frontend/img/user.png" />
+                <span class="am-navbar-label">我的</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+<script src="__CDN__/assets/frontend/plugins/swiper/swiper.js"></script>
+<script>
+    var mySwiper = new Swiper('.swiper-container', {
+        autoplay: 3000,
+        pagination : '.swiper-pagination'
+    })
+</script>
+</body>
+</html>

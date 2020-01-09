@@ -1,0 +1,32 @@
+.login-img{
+	/* padding-top: 5em; */
+}
+.login-img img{
+	width: 80px;
+	height: 80px;
+	display: block;
+	margin: 0 auto;
+}
+.am-form-group{
+	border: 1px solid #eeeeee;
+	border-radius: .3rem;
+	padding: 0.5rem 0;
+}
+.am-form input[type="text"], .am-form input[type="password"]{
+	border-bottom: none;
+}
+.am-form-horizontal .am-form-label{
+	padding-bottom: 0.4rem;
+	padding-top: 0.4rem;
+	border-right: 1px solid #eeeeee;
+}
+.am-form-horizontal .am-form-label img{
+	width: 76%;
+}
+.am-form input[type="text"],.am-form-field{
+	padding: 0.7rem 0 0.4rem 0;
+}
+.ycodeImg{
+	height: 2.3em;
+    width: 5.6em;
+}

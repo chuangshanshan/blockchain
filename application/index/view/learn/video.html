@@ -1,0 +1,198 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>智能AR系统</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/amazeui.css">
+    <link rel="stylesheet" href="__CDN__/assets/frontend/css/app.css">
+</head>
+<body>
+<!-- Content -->
+<div data-html="study">
+    <div data-am-widget="tabs" class="am-tabs am-tabs-default am-margin-0">
+        <ul class="am-tabs-nav am-cf border-b">
+            <li class="am-active">
+                <a href="[data-tab-panel-0]">视频</a>
+            </li>
+
+            <li onclick="window.location.href='/index/learn?type=2'">
+                <a href="">音频</a>
+            </li>
+            <li onclick="window.location.href='/index/learn?type=3'">
+                <a href="/index/learn?type=3">文章</a>
+            </li>
+            <li onclick="window.location.href='/index/learn?type=4'">
+                <a href="/index/learn?type=4">历史</a>
+            </li>
+        </ul>
+        <div class="am-tabs-bd">
+            <div data-tab-panel-0 class="am-tab-panel am-active">
+                <ul class="am-list">
+                    {foreach $videos.data as $video}
+                    <li class="am-g am-list-item-desced">
+                        <div class="am-list-main">
+                            <div class="am-list-item-text">
+                                <div class="am-margin-bottom-xs">
+                                    <video class="material" src="{$video.file}" data-id="{$video.id}" width="100%" controls="controls" poster="__CDN__/assets/frontend/img/video_begin.jpg" >
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                                <div class="am-text-black">视频介绍：<span>{$video.description}</span></div>
+                            </div>
+                        </div>
+                    </li>
+                    {/foreach}
+                </ul>
+            </div>
+        </div>
+        <div class="am-alert tips-text am-text-center">我也是有底线的</div>
+    </div>
+</div>
+</div>
+<!-- Footer-Menu -->
+<div data-am-widget="navbar" class="am-navbar am-cf am-navbar-default" id="footer-nav">
+    <ul class="am-navbar-nav am-cf am-avg-sm-4">
+        <li>
+            <a href="/index">
+                <img src="__CDN__/assets/frontend/img/home.png"/>
+                <span class="am-navbar-label">首页</span>
+            </a>
+        </li>
+        <li class="am-active">
+            <a href="/index/learn">
+                <img src="__CDN__/assets/frontend/img/study_a.png"/>
+                <span class="am-navbar-label">学习</span>
+            </a>
+        </li>
+        <li>
+            <a href="/index/examination">
+                <img src="__CDN__/assets/frontend/img/test.png"/>
+                <span class="am-navbar-label">考试</span>
+            </a>
+        </li>
+        <li>
+            <a href="/index/notice">
+                <img src="__CDN__/assets/frontend/img/message.png"/>
+                <span class="am-navbar-label">信息</span>
+            </a>
+        </li>
+        <li>
+            <a href="/index/user">
+                <img src="__CDN__/assets/frontend/img/user.png"/>
+                <span class="am-navbar-label">我的</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<script src="__CDN__/assets/frontend/js/jquery.min.js"></script>
+<script src="__CDN__/assets/frontend/js/amazeui.min.js"></script>
+
+<script>
+    var __token__ = '{$Request.token}';
+    //音频
+    $('.material').bind('play', function () {
+        var id = $(this).data('id');
+        $('.material').each(function () {
+            if ($(this).data('id') != id) {
+                $(this).trigger('pause');
+            }
+        })
+        $.ajax({
+            //请求方式
+            type: 'POST',
+            //发送请求的地址
+            url: 'history',
+            //服务器返回的数据类型
+            dataType: 'json',
+            //发送到服务器的数据，对象必须为key/value的格式，jquery会自动转换为字符串格式
+            data: {id: id,__token__: __token__},
+            success: function (data) {
+                //请求成功函数内容
+                __token__ = data.data.token;
+            },
+            error: function (jqXHR) {
+                //请求失败函数内容
+            }
+        });
+    })
+    // $('.material').each(function () {
+    //     'use strict';
+    //     var scale = 0.8;
+    //     var video = $(this).get(0);
+    //     $(this).bind('canplay',function () {
+    //         var canvas = document.createElement("canvas");
+    //         canvas.width = video.videoWidth * scale;
+    //         canvas.height = video.videoHeight * scale;
+    //         canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    //         // video.setAttribute('poster',canvas.toDataURL('image/png'));
+    //     })
+    //     $(this).bind('loadeddata',function () {
+    //         if(!video.getAttribute('poster')){
+    //             video.setAttribute('poster','/assets/frontend/img/video_begin.jpg');
+    //         }
+    //     })
+    //
+    // })
+    //分页
+    var p = 1, page = '{$videos.last_page}';  //p当前页,page后台传递总页数
+    //滚动分页
+    window.onscroll = function () {
+        var top = document.body.scrollTop || document.documentElement.scrollTop;
+        var height = document.body.scrollHeight || document.documentElement.scrollHeight;
+        if ((top + window.innerHeight) >= height - 49) {
+            p = p + 1;
+            if (p > page) {
+                p = page;
+                $('.tips-text').show();
+                return;
+            }
+            //从后台获取列表数据
+            $.ajax({
+                //请求方式
+                type: 'GET',
+                //发送请求的地址
+                url: window.location.href,
+                //服务器返回的数据类型
+                dataType: 'json',
+                //发送到服务器的数据，对象必须为key/value的格式，jquery会自动转换为字符串格式
+                data: {page: p},
+                success: function (data) {
+                    if (data.code == 1) {
+                        if (data.data) {
+                            var appendHtml = '';
+                            for (var i in data.data) {
+                                var video = data.data[i];
+                                appendHtml += '<li class="am-g am-list-item-desced">\n' +
+                                    '                        <div class="am-list-main">\n' +
+                                    '                            <div class="am-list-item-text">\n' +
+                                    '                                <div class="am-margin-bottom-xs">\n' +
+                                    '                                    <video class="material"  src="' + video.file + '"  data-id="' + video.id + '" width="100%" controls="controls"  poster="__CDN__/assets/frontend/img/video_begin.jpg">\n' +
+                                    '                                    </video>\n' +
+                                    '                                </div>\n' +
+                                    '                                <div class="am-text-black">视频介绍：<span>' + video.description + '</span></div>\n' +
+                                    '                            </div>\n' +
+                                    '                        </div>\n' +
+                                    '                    </li>';
+                            }
+                            $('.am-list').append(appendHtml);
+                        }
+                    } else {
+                        layer.msg('加载失败');
+                    }
+                },
+                error: function (jqXHR) {
+                    //请求失败函数内容
+                    layer.msg('加载失败');
+                }
+            });
+        }
+    }
+</script>
+</body>
+</html>
